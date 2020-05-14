@@ -10,11 +10,12 @@ from twitter import *
 
 import sys
 import csv
-
-latitude = 51.474144    # geographical centre of search
-longitude = -0.035401    # geographical centre of search
-max_range = 1             # search range in kilometres
-num_results = 50        # minimum results to obtain
+# London:  51.474144, -0.035401
+# melbourne: -37.814, 144.96332
+latitude = -37.814    # geographical centre of search
+longitude = 144.96332    # geographical centre of search
+max_range = 100             # search range in kilometres
+num_results = 10        # minimum results to obtain
 outfile = "output.csv"
 
 #-----------------------------------------------------------------------
@@ -41,7 +42,7 @@ csvwriter = csv.writer(csvfile)
 #-----------------------------------------------------------------------
 # add headings to our CSV file
 #-----------------------------------------------------------------------
-row = [ "user", "text", "latitude", "longitude" ]
+row = [ "user", "text", "location","latitude", "longitude" ]
 csvwriter.writerow(row)
 
 #-----------------------------------------------------------------------
@@ -66,13 +67,14 @@ while result_count <  num_results:
             user = result["user"]["screen_name"]
             text = result["text"]
             text = text.encode('ascii', 'replace')
+            location= result["user"]["location"]
             latitude = result["geo"]["coordinates"][0]
             longitude = result["geo"]["coordinates"][1]
 
             #-----------------------------------------------------------------------
             # now write this row to our CSV file
             #-----------------------------------------------------------------------
-            row = [ user, text, latitude, longitude ]
+            row = [ user, text, location, latitude, longitude ]
             csvwriter.writerow(row)
             result_count += 1
         last_id = result["id"]
@@ -88,4 +90,3 @@ while result_count <  num_results:
 csvfile.close()
 
 print("written to %s" % outfile)
-
